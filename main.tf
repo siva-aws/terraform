@@ -112,8 +112,30 @@ resource "aws_security_group" "allow_all" {
      vpc_security_group_ids = ["${aws_security_group.allow_all.id}"]
      associate_public_ip_address = true	
      tags = {
-         Name = "Test Server"
+         Name = "Terraform Server"
          Owner = "Siva"
+         environment = "prod"
+         location = "Pune"
+         Pincode = "516001"
      }
  }
 
+resource "aws_dynamodb_table" "terraform_locks" {
+  name           = "terraform-lock-tfstate-file"
+  billing_mode   = "PAY_PER_REQUEST" # Or PROVISIONED
+  hash_key       = "LockID"
+
+  attribute {
+    name = "LockID"
+    type = "S"
+  }
+}
+
+terraform {
+  backend "s3" {
+    bucket = "terraform-tfstate2026"
+    key    = "statefiles/terraform.tfvars"
+    region = "us-east-1"
+    dynamodb_table = "terraform-lock-tfstate-file"
+  }
+}
