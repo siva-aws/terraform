@@ -107,13 +107,20 @@ resource "aws_security_group" "allow_all" {
     ami = "ami-068c0051b15cdb816"
      availability_zone = "us-east-1a"
      instance_type = "t3.micro"
-     key_name = "AWS-Test"
+     key_name = "tf"
      subnet_id = "${aws_subnet.subnet1-public.id}"
      vpc_security_group_ids = ["${aws_security_group.allow_all.id}"]
      associate_public_ip_address = true	
      tags = {
-         Name = "Test Server"
+         Name = "AWS Server"
          Owner = "Siva"
      }
  }
 
+#terraform {
+#  backend "s3" {
+#    bucket = "terraform-tfstate2026"
+#    key    = "dev.state" #prod.state
+#    region = "us-east-1"
+#  }
+#}
